@@ -30,6 +30,7 @@ public class Parser {
 		case JI: 	return parseJIType(split_line, instr);
 		case JII: 	return parseJIIType(split_line, instr);
 		case L:		return parseLType(split_line, instr);
+		case RSI: return parseRSIType(split_line, instr);
 		case NOOP: 	return toBinary(0, 32);
 		default: 	throw new BadInstructionException(String.format("Unrecognized instruction type: %s\n", split_line[0]));
 		}
@@ -257,6 +258,30 @@ public class Parser {
 		}
 		
 		return opcode + rdCode + rsCode + rtCode + shamt + aluCode + "00";
+	}
+
+	static String parseRSIType(String[] splitLine, Instruction instr) throws BadInstructionException {
+
+		if(splitLine.length != 2) {
+			String message = String.format(BadInstructionException.MSG_TEMPLATE, "I", getOriginalInstruction(splitLine),
+					String.format(BadInstructionException.ARG_MSG, 2, splitLine.length-1));
+			throw new BadInstructionException(message);
+		}
+
+		String rdArg = splitLine[1];
+
+		// Get opcode
+		String opcode = instr.getOpcode();
+		String rdCode;
+		try {
+			rdCode = toBinary(parseRegister(rdArg), 5);
+		} catch(IllegalArgumentException e){
+			String message = String.format(BadInstructionException.MSG_TEMPLATE, "R", getOriginalInstruction(splitLine),
+					e.getMessage());
+			throw new BadInstructionException(message);
+		}
+
+		return opcode + rdCode + "00000" + "00000" + "00000" + "00000" + "00";
 	}
 
 	/**

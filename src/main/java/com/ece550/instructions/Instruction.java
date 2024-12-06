@@ -40,7 +40,19 @@ public enum Instruction {
 	LSS		(InstructionType.I, 	"01100"),
 	LRS		(InstructionType.I, 	"01101"),
 	// User input
-	WP		(InstructionType.L, 	"01110");
+	WP		(InstructionType.L, 	"01110"),
+
+	PKEY	(InstructionType.RSI, 	"11111"),
+	POBX1	(InstructionType.RSI, 	"01000"),
+	POBX2	(InstructionType.RSI, 	"01001"),
+	POBX3	(InstructionType.RSI, 	"01010"),
+	POBY1	(InstructionType.RSI, 	"01100"),
+	POBY2	(InstructionType.RSI, 	"01101"),
+	POBY3	(InstructionType.RSI, 	"01110"),
+	SSTA 	(InstructionType.RSI, 	"11100"),
+	SPOS	(InstructionType.RSI, 	"11101"),
+	SSCR	(InstructionType.RSI, 	"11110"),
+	RSED 	(InstructionType.NOOP, 	"11000");
 
 	private String opcode;
 	public InstructionType type;
