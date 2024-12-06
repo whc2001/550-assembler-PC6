@@ -149,7 +149,7 @@ public class GUI implements Executable{
                     MenuBarFactory.BREAK,
                     MenuBarFactory.MENU_ITEM, MenuItemFactory.CHECK_MENU, "Overwrite files?", OVERWRITE, TRUE,
                     MenuBarFactory.MENU_ITEM, MenuItemFactory.CHECK_MENU, "Search subdirs?", SEARCH_SUBDIRS, FALSE,
-                    MenuBarFactory.MENU_ITEM, MenuItemFactory.CHECK_MENU, "Add output dir?", CREATE_OUT_DIR, TRUE,
+                    MenuBarFactory.MENU_ITEM, MenuItemFactory.CHECK_MENU, "Add output dir?", CREATE_OUT_DIR, FALSE,
                 MenuBarFactory.BREAK,
                 MenuBarFactory.MENU, "Edit",
                     MenuBarFactory.MENU_ITEM, MenuItemFactory.DEFAULT_MENU, "Clear log", CLC_NOW,
