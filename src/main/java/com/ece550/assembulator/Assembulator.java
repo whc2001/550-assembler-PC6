@@ -11,6 +11,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.regex.Matcher.quoteReplacement;
+
 /**
  * Simple parser that converts MIPS code into machine code using the ISA
  * provided in instruction_codes.txt
@@ -39,6 +41,7 @@ public class Assembulator implements Assembler{
 
 	private List<String> rawAssembly = new ArrayList<>();
 	private Map<String, Integer> jumpTargets = new HashMap<>();
+	private Map<String, String> defines = new HashMap<>();
 	
 	private String filename;
 
@@ -55,7 +58,9 @@ public class Assembulator implements Assembler{
 	@Override
 	public void writeTo(InputStream is, OutputStream os, boolean padding) throws BadInstructionException {
         loadFile(is, padding);
+		parseDefines(rawAssembly);
 		List<String> filteredCode = filterCode(rawAssembly);
+		filteredCode = replaceDefines(filteredCode);
 		List<String> parsedCode = parseCode(filteredCode);		
 		writeCode(new PrintStream(os), filteredCode, parsedCode);
 		rawAssembly.clear();
@@ -94,6 +99,28 @@ public class Assembulator implements Assembler{
 		}
 	}
 
+	private void parseDefines(List<String> lines) {
+		defines.clear();
+		for (String line : lines) {
+			if(line.startsWith("#define")) {
+				String[] split = line.split("\\s+");
+				String key = split[1];
+				String value = split[2];
+				defines.put(key, value);
+			}
+		}
+	}
+
+	private List<String> replaceDefines(List<String> lines) {
+		List<String> ret = new ArrayList<>(lines);
+		for (Map.Entry<String, String> entry : defines.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			ret.replaceAll(s -> s.replaceAll(quoteReplacement(key), quoteReplacement(value)));
+		}
+		return ret;
+	}
+
 	/**
 	 * Takes raw assembly file line by line and filters out to instructions
 	 * 
@@ -104,7 +131,8 @@ public class Assembulator implements Assembler{
 
 		Predicate<String> EmptyAndCommentOnlyLines = s -> {
 			// Ignore comments and then split by comma/spaces
-			String[] split = s.split("\\#")[0].split("[,\\s]+");
+			//String[] split = s.split("\\#")[0].split("[,\\s]+");
+			String[] split = s.split("\\#");
 			boolean atLeastOneCommand = split.length > 0 && !split[0].isEmpty();
 			return atLeastOneCommand;
 		};
