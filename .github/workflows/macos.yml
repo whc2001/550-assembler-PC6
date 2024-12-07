@@ -16,9 +16,9 @@ jobs:
           distribution: 'adopt'
           cache: 'maven'
       - name: Build with Maven
-        run: mvn clean --batch-mode --update-snapshots package
+        run: mvn clean --batch-mode --update-snapshots -Dmaven.test.skip=true package
       - name: Build runtime environment of jre 
-        run: mvn --batch-mode --update-snapshots -Dmaven.test.skip=true javafx:jlink
+        run: mvn --batch-mode --update-snapshots javafx:jlink
       - name: Package app image
         run:  mvn exec:exec@image
       - uses: actions/upload-artifact@v3
