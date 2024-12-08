@@ -52,7 +52,9 @@ public enum Instruction {
 	SSTA 	(InstructionType.RSI, 	"11100"),
 	SPOS	(InstructionType.RSI, 	"11101"),
 	SSCR	(InstructionType.RSI, 	"11110"),
-	RSED 	(InstructionType.NOOP, 	"11000");
+	RSED 	(InstructionType.NOOP, 	"11000"),
+
+	SSND 	(InstructionType.RSI, 	"01111");
 
 	private String opcode;
 	public InstructionType type;
